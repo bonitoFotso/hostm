@@ -51,6 +51,13 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'auths',
+    'subscriptions',
+    'websites',
+    'contacts',
+    'projects',
+    'analytics',
+    'webhooks',
+    'payments',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -94,25 +101,19 @@ ASGI_APPLICATION = 'core.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': config('DB_NAME', default='django_app'),
-#        'USER': config('DB_USER', default='postgres'),
-#        'PASSWORD': config('DB_PASSWORD', default='password'),
-#        'HOST': config('DB_HOST', default='localhost'),
-#        'PORT': config('DB_PORT', default='5432'),
-#        'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=600, cast=int),
-#        'OPTIONS': {
-#            'connect_timeout': 10,
-#        }
-#    }
-#}
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default='hostmail'),
+        'USER': config('DB_USER', default='postgres'),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='5432'),
+        'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=600, cast=int),
+        'OPTIONS': {
+            'connect_timeout': 10,
+            'sslmode': config('DB_SSLMODE', default='require'),
+        }
     }
 }
 
@@ -328,13 +329,14 @@ LOGGING = {
 
 
 # Email Configuration
-EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='bonitofotso55@gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@example.com')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='HostMail <bonitofotso55@gmail.com>')
+SERVER_EMAIL = config('SERVER_EMAIL', default='bonitofotso55@gmail.com')
 
 
 # Cache Configuration (optionnel, mais recommandé)
@@ -348,4 +350,97 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'unique-snowflake',
     }
+}
+
+
+# =============================================================================
+# HOSTMAIL SAAS CONFIGURATION
+# =============================================================================
+
+# MinIO Storage Configuration
+USE_MINIO = config('USE_MINIO', default=True, cast=bool)
+
+if USE_MINIO:
+    # Use MinIO for media files
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    AWS_ACCESS_KEY_ID = config('MINIO_ACCESS_KEY', default='')
+    AWS_SECRET_ACCESS_KEY = config('MINIO_SECRET_KEY', default='')
+    AWS_STORAGE_BUCKET_NAME = config('MINIO_BUCKET_NAME', default='hostmail')
+    AWS_S3_ENDPOINT_URL = config('MINIO_ENDPOINT', default='https://minio.f2mb.xyz')
+    AWS_S3_REGION_NAME = config('MINIO_REGION', default='us-east-1')
+    AWS_S3_USE_SSL = config('MINIO_USE_SSL', default=True, cast=bool)
+    AWS_S3_VERIFY = config('MINIO_VERIFY_SSL', default=True, cast=bool)
+
+    # Additional S3/MinIO settings
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_CUSTOM_DOMAIN = config('MINIO_CUSTOM_DOMAIN', default='')
+else:
+    # Use local file storage
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# PayPal Configuration
+PAYPAL_MODE = config('PAYPAL_MODE', default='sandbox')  # 'sandbox' or 'live'
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID', default='')
+PAYPAL_CLIENT_SECRET = config('PAYPAL_CLIENT_SECRET', default='')
+
+
+# Rate Limiting Configuration
+RATELIMIT_ENABLE = config('RATELIMIT_ENABLE', default=True, cast=bool)
+RATELIMIT_USE_CACHE = 'default'
+
+# Rate limits par endpoint
+RATELIMIT_CONTACT_SUBMIT = config('RATELIMIT_CONTACT_SUBMIT', default='10/m')  # 10 par minute
+RATELIMIT_PROJECT_VIEW = config('RATELIMIT_PROJECT_VIEW', default='100/m')  # 100 par minute
+RATELIMIT_API_DEFAULT = config('RATELIMIT_API_DEFAULT', default='60/m')  # 60 par minute
+
+
+# HostMail Plans Configuration
+HOSTMAIL_PLANS = {
+    'free': {
+        'name': 'Free',
+        'price_monthly': 0,
+        'price_yearly': 0,
+        'websites_limit': 1,
+        'contacts_per_month': 50,
+        'projects_limit': 5,
+        'storage_mb': 100,
+        'analytics': False,
+        'integrations': False,
+        'custom_domain': False,
+        'white_label': False,
+        'priority_support': False,
+    },
+    'pro': {
+        'name': 'Pro',
+        'price_monthly': 9,
+        'price_yearly': 86,  # ~20% discount
+        'websites_limit': 3,
+        'contacts_per_month': 500,
+        'projects_limit': -1,  # Unlimited
+        'storage_mb': 1000,
+        'analytics': True,
+        'integrations': True,
+        'custom_domain': False,
+        'white_label': False,
+        'priority_support': False,
+    },
+    'agency': {
+        'name': 'Agency',
+        'price_monthly': 29,
+        'price_yearly': 278,  # ~20% discount
+        'websites_limit': -1,  # Unlimited
+        'contacts_per_month': 5000,
+        'projects_limit': -1,  # Unlimited
+        'storage_mb': 10000,
+        'analytics': True,
+        'integrations': True,
+        'custom_domain': True,
+        'white_label': True,
+        'priority_support': True,
+    },
 }
