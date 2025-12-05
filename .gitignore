@@ -1,0 +1,92 @@
+# Python
+__pycache__/
+*.py[cod]
+auths/
+*$py.class
+*.so
+*.pyc
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+
+# Environment
+.env
+.env.local
+.env.*.local
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+coverage.xml
+*.cover
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Docker
+.docker/
+
+# Secrets
+*.pem
+*.key
+secrets/
+core/__pycache__/wsgi.cpython-313.pyc
+core/__pycache__/urls.cpython-313.pyc
+core/__pycache__/settings.cpython-313.pyc
+core/__pycache__/__init__.cpython-313.pyc
+auths/migrations/__pycache__/0001_initial.cpython-313.pyc
+auths/migrations/__pycache__/__init__.cpython-313.pyc
+auths/__pycache__/views.cpython-313.pyc
+auths/__pycache__/urls.cpython-313.pyc
+auths/__pycache__/serializers.cpython-313.pyc
+auths/__pycache__/models.cpython-313.pyc
+auths/__pycache__/apps.cpython-313.pyc
+auths/__pycache__/admin.cpython-313.pyc
+auths/__pycache__/__init__.cpython-313.pyc
