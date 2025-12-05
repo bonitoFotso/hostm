@@ -26,23 +26,36 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-# API URL patterns
+# API URL patterns (authenticated endpoints)
 api_urlpatterns = [
     # Authentication endpoints
     path('auth/', include('auths.urls')),
-    
-    # Add other API endpoints here
-    # path('users/', include('users.urls')),
-    # path('products/', include('products.urls')),
+
+    # HostMail SaaS endpoints
+    path('subscriptions/', include('subscriptions.urls')),
+    path('websites/', include('websites.urls')),
+    path('contacts/', include('contacts.urls')),
+    path('projects/', include('projects.urls')),
+    path('analytics/', include('analytics.urls')),
+    path('webhooks/', include('webhooks.urls')),
+    path('payments/', include('payments.urls')),
+]
+
+# Public API URL patterns (require API key)
+public_api_urlpatterns = [
+    path('', include('core.public_urls')),
 ]
 
 urlpatterns = [
     # Admin interface
     path('admin/', admin.site.urls),
-    
-    # API routes (versioned)
+
+    # API routes (versioned - authenticated)
     path('api/v1/', include(api_urlpatterns)),
-    
+
+    # Public API routes (require API key)
+    path('api/public/', include(public_api_urlpatterns)),
+
     # API Documentation (Swagger/OpenAPI)
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
@@ -64,6 +77,6 @@ if settings.DEBUG:
         pass
 
 # Custom admin site configuration
-admin.site.site_header = "Core Administration"
-admin.site.site_title = "Core Admin Portal"
-admin.site.index_title = "Bienvenue sur le portail d'administration Core"
+admin.site.site_header = "HostMail Administration"
+admin.site.site_title = "HostMail Admin"
+admin.site.index_title = "Bienvenue sur le portail d'administration HostMail"
