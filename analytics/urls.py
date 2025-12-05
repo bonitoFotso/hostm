@@ -4,7 +4,7 @@ from .views import AnalyticsEventViewSet, DailyStatsViewSet, AnalyticsStatsView
 
 router = DefaultRouter()
 router.register(r'events', AnalyticsEventViewSet, basename='analyticevent')
-router.register(r'daily-stats', DailyStatsViewSet, basename='dailystats')
+router.register(r'daily', DailyStatsViewSet, basename='dailystats')
 
 urlpatterns = [
     path('', include(router.urls)),

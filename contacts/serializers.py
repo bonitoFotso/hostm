@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import ContactFormField, ContactMessage
-from websites.models import Website
 
 
 class ContactFormFieldSerializer(serializers.ModelSerializer):
@@ -28,6 +27,7 @@ class ContactMessageSerializer(serializers.ModelSerializer):
 
     website_name = serializers.CharField(source='website.name', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
+    ip_address = serializers.CharField(read_only=True, allow_null=True)
 
     class Meta:
         model = ContactMessage
@@ -39,7 +39,7 @@ class ContactMessageSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = [
-            'ip_address', 'user_agent', 'read_at', 'replied_at',
+            'user_agent', 'read_at', 'replied_at',
             'created_at', 'updated_at'
         ]
 
@@ -99,6 +99,6 @@ class ContactMessageUpdateStatusSerializer(serializers.Serializer):
     """Serializer pour mettre à jour le statut d'un message"""
 
     status = serializers.ChoiceField(
-        choices=['new', 'read', 'replied', 'archived', 'spam']
+        choices=ContactMessage.STATUS_CHOICES
     )
     notes = serializers.CharField(required=False, allow_blank=True)

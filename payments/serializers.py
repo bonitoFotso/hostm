@@ -49,8 +49,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
 class PayPalOrderCreateSerializer(serializers.Serializer):
     """Serializer pour créer une commande PayPal"""
 
-    plan = serializers.ChoiceField(choices=['pro', 'agency'])
-    billing_period = serializers.ChoiceField(choices=['monthly', 'yearly'])
+    plan = serializers.ChoiceField(choices=[('pro', 'Pro'), ('agency', 'Agency')])
+    billing_period = serializers.ChoiceField(choices=Subscription.BILLING_PERIOD_CHOICES)
 
     def validate_plan(self, value):
         """Valide que le plan n'est pas gratuit"""
@@ -71,9 +71,9 @@ class PayPalOrderCaptureSerializer(serializers.Serializer):
 class SubscriptionPaymentSerializer(serializers.Serializer):
     """Serializer pour le paiement d'un abonnement"""
 
-    plan = serializers.ChoiceField(choices=['pro', 'agency'])
-    billing_period = serializers.ChoiceField(choices=['monthly', 'yearly'])
-    payment_method = serializers.ChoiceField(choices=['paypal'], default='paypal')
+    plan = serializers.ChoiceField(choices=[('pro', 'Pro'), ('agency', 'Agency')])
+    billing_period = serializers.ChoiceField(choices=Subscription.BILLING_PERIOD_CHOICES)
+    payment_method = serializers.ChoiceField(choices=[('paypal', 'PayPal')], default='paypal')
 
     def get_amount(self):
         """Calcule le montant selon le plan et la période"""

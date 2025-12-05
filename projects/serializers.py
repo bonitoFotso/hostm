@@ -158,7 +158,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
         model = Project
         fields = [
             'id', 'title', 'slug', 'description', 'thumbnail',
-            'category', 'category_name', 'tags_data',
+            'category', 'category_name', 'tags_data','tags',
             'is_featured', 'status', 'status_display', 'views_count',
             'published_at', 'created_at'
         ]

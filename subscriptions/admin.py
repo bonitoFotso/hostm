@@ -7,7 +7,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ['user', 'plan', 'billing_period', 'status', 'started_at', 'expires_at']
     list_filter = ['plan', 'status', 'billing_period']
     search_fields = ['user__email', 'user__username']
-    readonly_fields = ['created_at', 'updated_at']
+    readonly_fields = ['created_at', 'updated_at','started_at', ]
     fieldsets = (
         ('Utilisateur', {
             'fields': ('user',)
@@ -29,6 +29,6 @@ class SubscriptionAdmin(admin.ModelAdmin):
             'fields': ('current_month_contacts', 'current_storage_mb')
         }),
         ('Dates', {
-            'fields': ('started_at', 'expires_at', 'cancelled_at', 'created_at', 'updated_at')
+            'fields': ('expires_at', 'cancelled_at', 'created_at', 'updated_at')
         }),
     )

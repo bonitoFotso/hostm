@@ -52,7 +52,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username', 'email', 'first_name', 'last_name',
-            'password', 'password_confirm', 'phone'
+            'password', 'password_confirm'
         )
 
     def validate(self, attrs):
@@ -79,7 +79,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'username', 'email', 'first_name', 'last_name',
-            'full_name', 'phone', 'avatar',
+            'full_name', 
             'date_joined', 'last_login'
         )
         read_only_fields = ('id', 'email', 'date_joined', 'last_login')
@@ -90,7 +90,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'phone', 'avatar')
+        fields = ('first_name', 'last_name', )
 
 
 class PasswordChangeSerializer(serializers.Serializer):

@@ -83,6 +83,17 @@ class ContactMessageViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'])
+    def mark_as_read(self, request, pk=None):
+        """Marque un message comme lu"""
+        message = self.get_object()
+        message.mark_as_read()
+
+        return Response({
+            'message': 'Message marqué comme lu',
+            'data': ContactMessageSerializer(message).data
+        })
+
+    @action(detail=True, methods=['post'])
     def mark_as_spam(self, request, pk=None):
         """Marque un message comme spam"""
         message = self.get_object()

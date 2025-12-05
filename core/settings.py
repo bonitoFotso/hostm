@@ -16,6 +16,7 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from urllib.parse import urlparse, parse_qsl
 
 
 # Quick-start development settings - unsuitable for production
@@ -102,19 +103,18 @@ ASGI_APPLICATION = 'core.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# Database
+tmpPostgres = urlparse(config("DATABASE_URL"))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='hostmail'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-        'CONN_MAX_AGE': config('DB_CONN_MAX_AGE', default=600, cast=int),
-        'OPTIONS': {
-            'connect_timeout': 10,
-            'sslmode': config('DB_SSLMODE', default='require'),
-        }
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
     }
 }
 
@@ -251,6 +251,7 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'X-API-Key',
 ]
 
 

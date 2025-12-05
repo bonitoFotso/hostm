@@ -68,7 +68,7 @@ class WebhookTestSerializer(serializers.Serializer):
     """Serializer pour tester un webhook"""
 
     event_type = serializers.ChoiceField(
-        choices=[choice[0] for choice in Webhook.EVENT_CHOICES]
+        choices=Webhook.EVENT_CHOICES
     )
     test_payload = serializers.JSONField(
         required=False,

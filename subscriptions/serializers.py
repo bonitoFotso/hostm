@@ -48,8 +48,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 class SubscriptionUpgradeSerializer(serializers.Serializer):
     """Serializer pour l'upgrade de subscription"""
 
-    plan = serializers.ChoiceField(choices=['free', 'pro', 'agency'])
-    billing_period = serializers.ChoiceField(choices=['monthly', 'yearly'])
+    plan = serializers.ChoiceField(choices=Subscription.PLAN_CHOICES)
+    billing_period = serializers.ChoiceField(choices=Subscription.BILLING_PERIOD_CHOICES)
 
     def validate_plan(self, value):
         """Valide que le nouveau plan est différent de l'actuel"""
