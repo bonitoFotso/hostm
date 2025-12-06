@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie du code source
 COPY . .
-RUN touch /app/logs/django_errors.log
+RUN mkdir -p /app/logs
 
 
 # Port exposé
