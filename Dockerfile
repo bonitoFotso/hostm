@@ -10,10 +10,10 @@ WORKDIR /app
 # Installation des dépendances
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN touch /app/logs/django_errors.log
 
 # Copie du code source
 COPY . .
+RUN touch /app/logs/django_errors.log
 
 
 # Port exposé
